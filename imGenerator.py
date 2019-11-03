@@ -35,7 +35,8 @@ def prepare_img_buffer(img_buffer):
 
 
 def create_cube(img_buffer, size, x_start, y_start, palette):
-    fill_ring(img_buffer, size, x_start, y_start, 0, random.choice(palette))
+    for ring_idx in range(size//2):
+        fill_ring(img_buffer, size, x_start, y_start, ring_idx, random.choice(palette))
 
 
 def print_img_buffer(img_buffer):
@@ -47,9 +48,10 @@ def fill_ring(img_buffer, size,  x_start, y_start, ring_idx, color):
     """ring_idx start at 0 (outside) and finish at cube_size - 1 (center)"""
     y = y_start + ring_idx
     final_x_start = x_start + ring_idx
-    final_x_end = final_x_start + size
+    final_x_end = x_start + size - ring_idx
     final_y_start = y_start + ring_idx
-    final_y_end = final_y_start + size
+    final_y_end = y_start + size - ring_idx
+    # print(f"{'-'*10}\n{final_x_start}/{final_y_start}, {final_x_end}/{final_y_end}")
 
     # Horizontal
     for x in range(final_x_start, final_x_end + 1):
@@ -62,14 +64,16 @@ def fill_ring(img_buffer, size,  x_start, y_start, ring_idx, color):
 
 
 if __name__ == '__main__':
-    IMG_SIZE = 16
+    IMG_SIZE = 128
     black = Color(0, 0, 0)
     white = Color(255, 255, 255)
     red = Color(255, 0, 0)
-    palette = [black, white, red]
+    blue = Color(0, 0, 255)
+    green = Color(0, 255, 0)
+    palette = [black, red, blue, green]
 
-    img_buffer = init_img_buffer(palette.pop(random.randint(0, len(palette) - 1)))
-    cube_size = 4
+    img_buffer = init_img_buffer(white)
+    cube_size = 8
     for x in range(0, IMG_SIZE, cube_size):
         for y in range(0, IMG_SIZE, cube_size):
             create_cube(img_buffer, cube_size - 1, x, y, palette)
