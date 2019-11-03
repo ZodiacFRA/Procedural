@@ -44,6 +44,24 @@ def print_img_buffer(img_buffer):
         print(line)
 
 
+def get_rgb_from_hex(hex_code):
+    res = tuple(int(hex_code[i:i + 2], 16) for i in (0, 2, 4))
+    return res
+
+
+def load_palette_from_file(filepath):
+    palette = []
+    with open(filepath, 'r', encoding='utf-8') as f:
+        data = f.read()
+        if data[-1] == '\n':
+            data = data[:-1]
+        data = data.split('\n')
+    for color_code in data:
+        rgb = get_rgb_from_hex(color_code.lstrip('#'))
+        palette.append(Color(*rgb))
+    return palette
+
+
 def fill_ring(img_buffer, size,  x_start, y_start, ring_idx, color):
     """ring_idx start at 0 (outside) and finish at cube_size - 1 (center)"""
     y = y_start + ring_idx
@@ -64,15 +82,10 @@ def fill_ring(img_buffer, size,  x_start, y_start, ring_idx, color):
 
 
 if __name__ == '__main__':
-    IMG_SIZE = 128
-    black = Color(0, 0, 0)
-    white = Color(255, 255, 255)
-    red = Color(255, 0, 0)
-    blue = Color(0, 0, 255)
-    green = Color(0, 255, 0)
-    palette = [black, red, blue, green]
-
-    img_buffer = init_img_buffer(white)
+    IMG_SIZE = 512
+    palette = load_palette_from_file("./palette.cfg")
+    bg_color = palette.pop(random.randint(0, len(palette) - 1))
+    img_buffer = init_img_buffer(bg_color)
     cube_size = 8
     for x in range(0, IMG_SIZE, cube_size):
         for y in range(0, IMG_SIZE, cube_size):
