@@ -89,12 +89,12 @@ def fill_ring(img_buffer, size,  x_start, y_start, ring_idx, color):
 
 
 if __name__ == '__main__':
-    IMG_SIZE = 128
+    IMG_SIZE = random.choice([128, 256, 512, 1024])
     # palette = load_palette_from_file("./palettes/circus_III.palette")
     palette = load_random_palette("./palettes")
     bg_color = palette.pop(random.randint(0, len(palette) - 1))
     img_buffer = init_img_buffer(bg_color)
-    cube_size = 16
+    cube_size = random.choice([8, 16, 32])
     for x in range(0, IMG_SIZE, cube_size):
         for y in range(0, IMG_SIZE, cube_size):
             create_cube(img_buffer, cube_size - 1, x, y, palette)
